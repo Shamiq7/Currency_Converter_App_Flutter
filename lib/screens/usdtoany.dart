@@ -13,7 +13,7 @@ class Usdtoany extends StatefulWidget {
 class _UsdtoanyState extends State<Usdtoany> {
   TextEditingController usdcontroller = TextEditingController();
   String dropdownvalue = 'AUD';
-  String ans = 'Converted Currency Will be Shown Here';
+  String ans = 'Converted Currency Will be Shown Here :)';
   @override
   Widget build(BuildContext context) {
     return Card(

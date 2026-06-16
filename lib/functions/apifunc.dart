@@ -19,11 +19,25 @@ Future<RatesModel> fetchrates() async {
   return result;
 }
 
-
-// what does exchnageRates[currency] mean? = suppose user chose AED as currency now our map gives us (AED: 3.672538), here we are acessing the 3.672538 of currency AED, same for all currencies 
+// what does exchnageRates[currency] mean? = suppose user chose AED as currency now our map gives us (AED: 3.672538), here we are acessing the 3.672538 of currency AED, same for all currencies
 // after getting currency value we are simply * it with USD val
 String convertUSD(Map exchangeRates, String USD, String Currency) {
   String output = ((exchangeRates[Currency] * double.parse(USD)).toString())
       .toString();
+  return output;
+}
+
+String convertANY(
+  Map exchnagerates,
+  String USD,
+  String currencybase,
+  String currencyFinal,
+) {
+  String output =
+      (double.parse(USD) /
+              exchnagerates[currencybase] *
+              exchnagerates[currencyFinal])
+          .toStringAsFixed(2)
+          .toString();
   return output;
 }

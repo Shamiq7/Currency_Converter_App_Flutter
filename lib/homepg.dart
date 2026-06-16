@@ -114,7 +114,10 @@ class _HomepgState extends State<Homepg> {
                                   SizedBox(
                                     height: 280,
                                     width: 370,
-                                    child: Convertany(),
+                                    child: Convertany(
+                                      currencies: currsnapshot.data!,
+                                      rates: snapshot.data!.rates,
+                                    ),
                                   ),
                                 ],
                               ),
