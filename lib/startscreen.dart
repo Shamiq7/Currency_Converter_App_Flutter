@@ -27,7 +27,7 @@ class Startscreen extends StatelessWidget {
             Positioned(
               top: 787,
               left: 40,
-              child: Container(
+              child: SizedBox(
                 width: 350,
                 height: 55,
                 child: ElevatedButton(

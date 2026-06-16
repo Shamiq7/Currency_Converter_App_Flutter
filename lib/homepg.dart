@@ -1,3 +1,7 @@
+import 'package:currency_converter_app/functions/apifunc.dart';
+import 'package:currency_converter_app/modals/ratesmodel.dart';
+import 'package:currency_converter_app/screens/convertany.dart';
+import 'package:currency_converter_app/screens/usdtoany.dart';
 import 'package:flutter/material.dart';
 
 class Homepg extends StatefulWidget {
@@ -8,6 +12,20 @@ class Homepg extends StatefulWidget {
 }
 
 class _HomepgState extends State<Homepg> {
+  late Future<Map> allCurrencies;
+  late Future<RatesModel> result;
+  final formkey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      allCurrencies = fetchcurrencies();
+      result = fetchrates();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,261 +44,90 @@ class _HomepgState extends State<Homepg> {
         ),
       ),
       body: SafeArea(
-        child: SizedBox(
-          height: 1000,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Expanded(
-                  child: Image.asset('images/pic2.jpg', fit: BoxFit.fill),
-                ),
-              ),
-              Positioned(
-                top: 60,
-                left: 20,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 280,
-                      width: 370,
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'USD To Any Currency',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
+        child: Form(
+          key: formkey,
+          child: SingleChildScrollView(
+            child: FutureBuilder<RatesModel>(
+              future: result,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      snapshot.error.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: Text('No rates Data'));
+                }
+
+                return Center(
+                  child: FutureBuilder<Map>(
+                    future: allCurrencies,
+                    builder: (context, currsnapshot) {
+                      if (currsnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (currsnapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            currsnapshot.error.toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }
+                      if (!currsnapshot.hasData) {
+                        return const Center(child: Text('No currency data'));
+                      }
+                      return SizedBox(
+                        height: 800,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image.asset(
+                                'images/pic2.jpg',
+                                fit: BoxFit.fill,
                               ),
-                              SizedBox(height: 15),
-                              SizedBox(
-                                width: 330,
-                                height: 50,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        width: 1.5,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        width: 1.5,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Row(
+                            ),
+                            Positioned(
+                              top: 60,
+                              left: 20,
+                              child: Column(
                                 children: [
                                   SizedBox(
-                                    width: 220,
-                                    height: 50,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        suffixIcon: Icon(Icons.close),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
+                                    height: 280,
+                                    width: 370,
+                                    child: Usdtoany(
+                                      currencies: currsnapshot.data!,
+                                      rates: snapshot.data!.rates,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.purple,
-                                    ),
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Convert',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                  SizedBox(height: 30),
+                                  //
+                                  //
+                                  //
+                                  SizedBox(
+                                    height: 280,
+                                    width: 370,
+                                    child: Convertany(),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 30),
-                              Text(
-                                '5 USD = 6.90 AUD',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    //
-                    //
-                    //
-                    SizedBox(
-                      height: 280,
-                      width: 370,
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Convert Any Currency',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              SizedBox(
-                                width: 330,
-                                height: 50,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        width: 1.5,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        width: 1.5,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 150,
-                                    height: 50,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'to',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  SizedBox(
-                                    width: 150,
-                                    height: 50,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.purple,
-                                ),
-                                onPressed: () {},
-                                child: Text(
-                                  'Convert',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                '5 USD = 6.90 AUD',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                      );
+                    },
+                  ),
+                );
+              },
+              //
+            ),
           ),
         ),
       ),
