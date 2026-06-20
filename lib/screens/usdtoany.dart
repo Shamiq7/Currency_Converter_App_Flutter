@@ -115,15 +115,11 @@ class _UsdtoanyState extends State<Usdtoany> {
                   onPressed: () {
                     setState(() {
                       ans =
-                          usdcontroller.text +
-                          'USD =' +
-                          convertUSD(
+                          '${usdcontroller.text}USD =${convertUSD(
                             widget.rates,
                             usdcontroller.text,
                             dropdownvalue,
-                          ) +
-                          ' ' +
-                          dropdownvalue;
+                          )} $dropdownvalue';
                     });
                   },
                   child: Text(

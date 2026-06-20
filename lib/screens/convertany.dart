@@ -127,18 +127,12 @@ class _ConvertanyState extends State<Convertany> {
                 onPressed: () {
                   setState(() {
                     ans =
-                        amountcontroller.text +
-                        ' ' +
-                        dropdownVal1 +
-                        ' ' +
-                        convertANY(
+                        '${amountcontroller.text} $dropdownVal1 ${convertANY(
                           widget.rates,
                           amountcontroller.text,
                           dropdownVal1,
                           dropdownVal2,
-                        ) +
-                        ' ' +
-                        dropdownVal2;
+                        )} $dropdownVal2';
                   });
                 },
                 child: Text(

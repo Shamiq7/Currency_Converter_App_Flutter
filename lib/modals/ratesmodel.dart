@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+ 
 RatesModel ratesModelFromJson(String str) =>
     RatesModel.fromJson(json.decode(str));
 
