@@ -1,4 +1,4 @@
-import 'package:currency_converter_app/homepg.dart';
+import 'package:currency_converter_app/pages/homepg.dart';
 import 'package:flutter/material.dart';
 
 class Startscreen extends StatelessWidget {

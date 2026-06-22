@@ -1,7 +1,7 @@
 import 'package:currency_converter_app/functions/apifunc.dart';
 import 'package:currency_converter_app/modals/ratesmodel.dart';
-import 'package:currency_converter_app/screens/convertany.dart';
-import 'package:currency_converter_app/screens/usdtoany.dart';
+import 'package:currency_converter_app/widgets/convertany.dart';
+import 'package:currency_converter_app/widgets/usdtoany.dart';
 import 'package:flutter/material.dart';
 
 class Homepg extends StatefulWidget {

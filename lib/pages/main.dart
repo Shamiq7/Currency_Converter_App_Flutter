@@ -1,4 +1,4 @@
-import 'package:currency_converter_app/startscreen.dart';
+import 'package:currency_converter_app/pages/startscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
